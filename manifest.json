@@ -1,0 +1,34 @@
+{
+  "name": "javdb plugin",
+  "description" : "javdb plugin",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "popup.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://javdb.com/*"
+      ],
+      "js": [
+        "content_script/javList.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://javdb.com/v/*"
+      ],
+      "js": [
+        "content_script/javDetail.js"
+      ]
+    }
+  ],
+  "background": {
+    "service_worker": "service_worker/service_worker.js"
+  },
+  "permissions": [
+    "storage","tabs"
+  ]
+}
