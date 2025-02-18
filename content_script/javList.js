@@ -39,7 +39,10 @@ function getPageVideoNum(isFirstPage, isLastPage){
     var lastVideoNums = getStorage(lastVideoNumsStorageTag);
 
     if(!lastVideoNums.includes(currentPageNums)){
-        lastVideoNums = lastVideoNums + '\n' + currentPageNums;
+        if(lastVideoNums.length>0){
+            lastVideoNums = lastVideoNums + '\n';
+        }
+        lastVideoNums = lastVideoNums + currentPageNums;
     }
     //将号码发送到粘贴板
     navigator.clipboard.writeText(lastVideoNums)
