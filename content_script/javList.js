@@ -18,19 +18,55 @@
 
 
 addOutPutVideoNumBtn()
+const lastVideoNumsStorageTag = 'lastVideoNums';
 
-function getPageVideoNum(){
+function getPageVideoNum(isFirstPage, isLastPage){
     var elements = document.getElementsByClassName('video-title');
     var videoNums = new Array();
     for(var i=0; i<elements.length; i++){
         var videoNum = elements[i].getElementsByTagName('strong');
         if(videoNum.length>0){
-            videoNums.push(videoNum[0].innerText)
+            videoNums.push(videoNum[0].innerText);
         }
     }
     videoNums.sort();
-    navigator.clipboard.writeText(videoNums.toString().replaceAll(',','\n'))
-      .catch((error) => { alert(`导出失败! ${error}`) });
+
+    if(isFirstPage){
+        //第一页清空历史记录
+        setStorage(lastVideoNumsStorageTag, '');
+    }
+    var currentPageNums = videoNums.toString().replaceAll(',','\n');
+    var lastVideoNums = getStorage(lastVideoNumsStorageTag);
+
+    if(!lastVideoNums.includes(currentPageNums)){
+        lastVideoNums = lastVideoNums + '\n' + currentPageNums;
+    }
+    //将号码发送到粘贴板
+    navigator.clipboard.writeText(lastVideoNums)
+        .catch((error) => { alert(`导出失败! ${error}`) });
+
+    if(!isLastPage){
+        //不是最后一页，保存此页号码
+        setStorage(lastVideoNumsStorageTag,lastVideoNums);
+    }else{
+        //最后一页页清空历史记录
+        setStorage(lastVideoNumsStorageTag, '');
+    }
+}
+
+function getStorage(tag){
+    return localStorage.getItem(tag);
+}
+
+function setStorage(tag,info){
+    localStorage.setItem(tag,info);
+}
+
+function isFistPage(){
+    //根据url有没有page参数判断是否是第一页
+    var url = document.URL;
+    var searchParams = new URLSearchParams(url);
+    return !searchParams.has('page');
 }
 
 function addOutPutVideoNumBtn(){
@@ -46,8 +82,19 @@ function addOutPutVideoNumBtn(){
     myDev.appendChild(button);
     pageTitle[0].appendChild(myDev);
 
+    var nextBtn = document.getElementsByClassName('pagination-next');
+
     var myBtn = document.getElementById('btn_output_video_num');
     myBtn.addEventListener('click', () => {
-        getPageVideoNum();
+        if(nextBtn.length !=0 ){
+            //自动点击下一页
+            nextBtn[0].click();
+        }
+        getPageVideoNum(isFistPage());
       });
 }
+
+
+
+
+
