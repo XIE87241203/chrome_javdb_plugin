@@ -8,6 +8,7 @@ function getDownLoadInfos(){
     var videoName = getVideoName();
     var linkDivListEle = document.getElementById('magnets-content');
     var downloadLinkInfoList = [];
+    var hasChineseNum = 0
     for(var i=0; i<linkDivListEle.childElementCount; i++){
         var root = linkDivListEle.children[i];
         var link = root.getElementsByTagName('a')[0].getAttribute('href');
@@ -36,6 +37,7 @@ function getDownLoadInfos(){
                 break;
             }
         }
+        if(hasChinese) hasChineseNum = hasChinese + 1;
         var downloadLinkInfo = new DownloadLinkInfo(fileName, size, fileNum, link, hasChinese, 0);
         calDownloadInfoScore(downloadLinkInfo)
         downloadLinkInfoList.push(downloadLinkInfo);
@@ -44,6 +46,8 @@ function getDownLoadInfos(){
     downloadLinkInfoList.sort(function(a,b){
        return b.score - a.score;
     })
+
+    if(hasChineseNum>1) videoName = videoName + "（多个字幕）"
     var downloadInfo = new DownloadInfo(videoName,downloadLinkInfoList)
     console.log(downloadInfo);
     return downloadInfo;
