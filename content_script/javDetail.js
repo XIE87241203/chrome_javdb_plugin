@@ -37,7 +37,7 @@ function getDownLoadInfos(){
                 break;
             }
         }
-        if(hasChinese) hasChineseNum = hasChinese + 1;
+        if(hasChinese) hasChineseNum = hasChineseNum + 1;
         var downloadLinkInfo = new DownloadLinkInfo(fileName, size, fileNum, link, hasChinese, 0);
         calDownloadInfoScore(downloadLinkInfo)
         downloadLinkInfoList.push(downloadLinkInfo);
@@ -46,8 +46,7 @@ function getDownLoadInfos(){
     downloadLinkInfoList.sort(function(a,b){
        return b.score - a.score;
     })
-
-    if(hasChineseNum>1) videoName = videoName + "（多个字幕）"
+    if(hasChineseNum > 1) videoName = videoName + "（多个字幕）"
     var downloadInfo = new DownloadInfo(videoName,downloadLinkInfoList)
     console.log(downloadInfo);
     return downloadInfo;
